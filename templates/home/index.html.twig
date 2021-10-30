@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Homepage{% endblock %}
+
+{% block body %}
+    <div class="container mt-5" style="width: 30%;">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="API key" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="City" aria-describedby="button-addon2">
+            <button class="btn btn-outline-secondary btn-success" type="button" id="button-addon2"><i class="bi bi-check-lg text-white"></i></button>
+        </div>
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Vilnius</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Kaunas</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Birstonas</a>
+            </li>
+        </ul>
+    </div>
+
+
+{% endblock %}
