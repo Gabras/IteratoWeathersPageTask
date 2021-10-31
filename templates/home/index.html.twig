@@ -5,12 +5,14 @@
 {% block body %}
     <div class="container mt-5" style="width: 30%;">
         <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="API key" aria-describedby="basic-addon1">
+            <input type="text" class="form-control" placeholder="API key" id="apiKey">
         </div>
         <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="City" aria-describedby="button-addon2">
-            <button class="btn btn-outline-secondary btn-success" type="button" id="button-addon2"><i class="bi bi-check-lg text-white"></i></button>
+            <input type="text" class="form-control" placeholder="City" id="city">
+            <button class="btn btn-outline-secondary btn-success" type="button" id="fetchData"><i class="bi bi-check-lg text-white"></i></button>
         </div>
+
+        <div id="dbData"></div>
 
         <ul class="nav nav-tabs">
             <li class="nav-item">
@@ -25,5 +27,23 @@
         </ul>
     </div>
 
+    <script>
+        console.log('working');
+        $("#fetchData").click(function (e) {
+            $.ajax({
+                type: "POST",
+                url: "weather",
+                contentType: "application/json; charset=utf-8",
+                data: '{"apiKey":"' + $("#apiKey").val() + '","city":"' + $("#city").val() + '"}',
+                dataType: "json",
+                success: function (result, status, xhr) {
+                    $("#dbData").html(result);
+                },
+                error: function (xhr, status, error) {
+                    $("#dbData").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+                }
+            });
+        });
+    </script>
 
 {% endblock %}
