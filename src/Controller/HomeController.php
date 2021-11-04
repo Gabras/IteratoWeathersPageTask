@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class HomeController extends AbstractController
 {
@@ -16,7 +18,7 @@ class HomeController extends AbstractController
     public function index(): Response
     {
         return $this->render('home/index.html.twig', [
-            'controller_name' => 'HomeController',
+            'controller_name' => 'HomeController'
         ]);
     }
 
@@ -30,6 +32,25 @@ class HomeController extends AbstractController
 
         //Logic for 3rd party API
 
-        return new JsonResponse($data['city'], Response::HTTP_OK);
+        $weatherInfo = $this->fetchWeatherApi($data);
+
+        //End of basic logic
+
+        return new JsonResponse($weatherInfo, Response::HTTP_OK);
+    }
+
+    public function fetchWeatherApi($data)
+    {
+        try {
+            $response = HttpClient::create()->request('GET', 'https://api.openweathermap.org/data/2.5/weather?', [
+                'query' => [
+                    'q' => $data['city'],
+                    'appid' => $data['apiKey'],
+                ],
+            ]);
+            return json_decode($response->getContent());
+        } catch (\HttpException $exception) {
+            return $exception;
+        }
     }
 }

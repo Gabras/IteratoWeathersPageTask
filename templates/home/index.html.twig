@@ -14,21 +14,18 @@
 
         <div id="dbData"></div>
 
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Vilnius</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Kaunas</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Birstonas</a>
-            </li>
-        </ul>
+{#        <ul class="nav nav-tabs">#}
+{#            {% for data in weathersData %}#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link" href="#">{{ data.name }}</a>#}
+{#                </li>#}
+{#            {% endfor %}#}
+{#        </ul>#}
     </div>
 
     <script>
-        console.log('working');
+        let weatherData = [];
+
         $("#fetchData").click(function (e) {
             $.ajax({
                 type: "POST",
@@ -37,7 +34,11 @@
                 data: '{"apiKey":"' + $("#apiKey").val() + '","city":"' + $("#city").val() + '"}',
                 dataType: "json",
                 success: function (result, status, xhr) {
-                    $("#dbData").html(result);
+                    // $("#dbData").html(result);
+
+                    $("#dbData").html(result['name']);
+                    weatherData.push(result);
+                    // sessionStorage.setItem('weathersInfo', JSON.stringify(weatherData));
                 },
                 error: function (xhr, status, error) {
                     $("#dbData").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
