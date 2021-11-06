@@ -12,19 +12,52 @@
             <button class="btn btn-outline-secondary btn-success" type="button" id="fetchData"><i class="bi bi-check-lg text-white"></i></button>
         </div>
 
-        <div id="dbData"></div>
+        <div id="error">
+        </div>
 
-{#        <ul class="nav nav-tabs">#}
-{#            {% for data in weathersData %}#}
-{#                <li class="nav-item">#}
-{#                    <a class="nav-link" href="#">{{ data.name }}</a>#}
-{#                </li>#}
-{#            {% endfor %}#}
-{#        </ul>#}
+        <ul class="nav nav-tabs">
+{#            <li class="nav-item">#}
+{#                <a class="nav-link active" aria-current="page" href="#">Active</a>#}
+{#            </li>#}
+{#            <li class="nav-item">#}
+{#                <a class="nav-link" href="#">Link</a>#}
+{#            </li>#}
+            <div id="tabData">
+            </div>
+        </ul>
+
+        <div id="tabInfo">
+        </div>
     </div>
 
     <script>
-        let weatherData = [];
+        let identification = 0;
+        let weathersData = [];
+
+        function tabClick($id) {
+            $('#tabInfo').html(
+                '<h3 class="d-flex justify-content-center">'+ weathersData[$id].name +'</h3>\n' +
+                '<table class="table">\n' +
+                '  <thead>\n' +
+                '    <tr>\n' +
+                '      <th scope="col">Lowest temperature</th>\n' +
+                '      <th scope="col">Highest temperature</th>\n' +
+                '      <th scope="col">Temperature now</th>\n' +
+                '      <th scope="col">Weather description</th>\n' +
+                '      <th scope="col">Wind speed</th>\n' +
+                '    </tr>\n' +
+                '  </thead>\n' +
+                '  <tbody>\n' +
+                '    <tr>\n' +
+                '      <td>'+ weathersData[$id].main.temp_min +'</td>\n' +
+                '      <td>'+ weathersData[$id].main.temp_max +'</td>\n' +
+                '      <td>'+ weathersData[$id].main.temp +'</td>\n' +
+                '      <td>'+ weathersData[$id].weather[0].description +'</td>\n' +
+                '      <td>'+ weathersData[$id].wind.speed +'</td>\n' +
+                '    </tr>\n' +
+                '  </tbody>\n' +
+                '</table>');
+        }
 
         $("#fetchData").click(function (e) {
             $.ajax({
@@ -34,14 +67,18 @@
                 data: '{"apiKey":"' + $("#apiKey").val() + '","city":"' + $("#city").val() + '"}',
                 dataType: "json",
                 success: function (result, status, xhr) {
-                    // $("#dbData").html(result);
-
-                    $("#dbData").html(result['name']);
-                    weatherData.push(result);
-                    // sessionStorage.setItem('weathersInfo', JSON.stringify(weatherData));
+                    if (!weathersData.some(result => result.name === weathersData)) {
+                        console.log(weathersData)
+                        $("#error").html("");
+                        $('#tabData').append('<li class="nav-item"><a class="nav-link" onclick="tabClick(this.id)" id="' + identification + '">' + result['name'] + '</a></li>');
+                        identification++;
+                        weathersData.push(result);
+                    } else {
+                        $("#error").html("Toks miestas jau įtrauktas")
+                    }
                 },
                 error: function (xhr, status, error) {
-                    $("#dbData").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+                    $("#error").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
                 }
             });
         });
