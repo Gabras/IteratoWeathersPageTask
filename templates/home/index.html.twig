@@ -9,22 +9,16 @@
         </div>
         <div class="input-group mb-3">
             <input type="text" class="form-control" placeholder="City" id="city">
-            <button class="btn btn-outline-secondary btn-success" type="button" onclick="fetchData()"><i class="bi bi-check-lg text-white"></i></button>
+            <button class="btn btn-outline-secondary btn-success" type="button" onclick="fetchData()"><i
+                        class="bi bi-check-lg text-white"></i></button>
         </div>
 
         <div id="error">
         </div>
 
-        <ul class="nav nav-tabs">
-{#            <li class="nav-item">#}
-{#                <a class="nav-link active" aria-current="page" href="#">Active</a>#}
-{#            </li>#}
-{#            <li class="nav-item">#}
-{#                <a class="nav-link" href="#">Link</a>#}
-{#            </li>#}
-            <div id="tabData">
-            </div>
+        <ul class="nav nav-tabs justify-content-center" id="tabData">
         </ul>
+
 
         <div id="tabInfo">
         </div>
@@ -36,14 +30,14 @@
         let currentActiveId = -1;
 
         function tabClick($id) {
-            if(currentActiveId !== -1) {
-                $('#'+currentActiveId).removeClass('active');
+            if (currentActiveId !== -1) {
+                $('#' + currentActiveId).removeClass('active');
             }
-            $('#'+$id).addClass('active');
+            $('#' + $id).addClass('active');
             currentActiveId = $id;
 
             $('#tabInfo').html(
-                '<h3 class="d-flex justify-content-center">'+ weathersData[$id].name +'</h3>\n' +
+                '<h3 class="d-flex justify-content-center">' + weathersData[$id].name + '</h3>\n' +
                 '<table class="table">\n' +
                 '  <thead>\n' +
                 '    <tr>\n' +
@@ -56,11 +50,11 @@
                 '  </thead>\n' +
                 '  <tbody>\n' +
                 '    <tr>\n' +
-                '      <td>'+ weathersData[$id].main.temp_min +'</td>\n' +
-                '      <td>'+ weathersData[$id].main.temp_max +'</td>\n' +
-                '      <td>'+ weathersData[$id].main.temp +'</td>\n' +
-                '      <td>'+ weathersData[$id].weather[0].description +'</td>\n' +
-                '      <td>'+ weathersData[$id].wind.speed +'</td>\n' +
+                '      <td>' + weathersData[$id].main.temp_min + '</td>\n' +
+                '      <td>' + weathersData[$id].main.temp_max + '</td>\n' +
+                '      <td>' + weathersData[$id].main.temp + '</td>\n' +
+                '      <td>' + weathersData[$id].weather[0].description + '</td>\n' +
+                '      <td>' + weathersData[$id].wind.speed + '</td>\n' +
                 '    </tr>\n' +
                 '  </tbody>\n' +
                 '</table>');
@@ -74,8 +68,8 @@
             return weathersData.some(weathersData => weathersData.name === $data);
         }
 
-        function fetchData(){
-            if(checkInputs()) {
+        function fetchData() {
+            if (checkInputs()) {
                 $.ajax({
                     type: "POST",
                     url: "weather",
@@ -85,7 +79,16 @@
                     success: function (result) {
                         if (!checkIfAlreadyContains(result['name'])) {
                             $("#error").html("");
-                            $('#tabData').append('<li class="nav-item"><a class="nav-link" onclick="tabClick(this.id)" id="' + identification + '">' + result['name'] + '</a></li>');
+                            $('#tabData').append(
+                                '<li class="nav-item">\n' +
+                                    '<a ' +
+                                        'class="nav-link"' +
+                                        ' onclick="tabClick(this.id)"' +
+                                        ' id="' + identification + '">' +
+                                        result['name'] +
+                                    '</a>\n' +
+                                '</li>'
+                            );
                             identification++;
                             weathersData.push(result);
                         } else {
