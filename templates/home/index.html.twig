@@ -9,7 +9,7 @@
         </div>
         <div class="input-group mb-3">
             <input type="text" class="form-control" placeholder="City" id="city">
-            <button class="btn btn-outline-secondary btn-success" type="button" id="fetchData"><i class="bi bi-check-lg text-white"></i></button>
+            <button class="btn btn-outline-secondary btn-success" type="button" onclick="fetchData()"><i class="bi bi-check-lg text-white"></i></button>
         </div>
 
         <div id="error">
@@ -33,8 +33,15 @@
     <script>
         let identification = 0;
         let weathersData = [];
+        let currentActiveId = -1;
 
         function tabClick($id) {
+            if(currentActiveId !== -1) {
+                $('#'+currentActiveId).removeClass('active');
+            }
+            $('#'+$id).addClass('active');
+            currentActiveId = $id;
+
             $('#tabInfo').html(
                 '<h3 class="d-flex justify-content-center">'+ weathersData[$id].name +'</h3>\n' +
                 '<table class="table">\n' +
@@ -59,29 +66,41 @@
                 '</table>');
         }
 
-        $("#fetchData").click(function (e) {
-            $.ajax({
-                type: "POST",
-                url: "weather",
-                contentType: "application/json; charset=utf-8",
-                data: '{"apiKey":"' + $("#apiKey").val() + '","city":"' + $("#city").val() + '"}',
-                dataType: "json",
-                success: function (result, status, xhr) {
-                    if (!weathersData.some(result => result.name === weathersData)) {
-                        console.log(weathersData)
-                        $("#error").html("");
-                        $('#tabData').append('<li class="nav-item"><a class="nav-link" onclick="tabClick(this.id)" id="' + identification + '">' + result['name'] + '</a></li>');
-                        identification++;
-                        weathersData.push(result);
-                    } else {
-                        $("#error").html("Toks miestas jau įtrauktas")
+        function checkInputs() {
+            return $("#apiKey").val() !== '' && $("#city").val() !== '';
+        }
+
+        function checkIfAlreadyContains($data) {
+            return weathersData.some(weathersData => weathersData.name === $data);
+        }
+
+        function fetchData(){
+            if(checkInputs()) {
+                $.ajax({
+                    type: "POST",
+                    url: "weather",
+                    contentType: "application/json; charset=utf-8",
+                    data: '{"apiKey":"' + $("#apiKey").val() + '","city":"' + $("#city").val() + '"}',
+                    dataType: "json",
+                    success: function (result) {
+                        if (!checkIfAlreadyContains(result['name'])) {
+                            $("#error").html("");
+                            $('#tabData').append('<li class="nav-item"><a class="nav-link" onclick="tabClick(this.id)" id="' + identification + '">' + result['name'] + '</a></li>');
+                            identification++;
+                            weathersData.push(result);
+                        } else {
+                            $("#error").html('<div class="text-danger">This town already exists!</div>')
+                        }
+                    },
+                    error: function () {
+                        $("#error").html('<div class="text-danger">Something went wrong, try again!</div>')
                     }
-                },
-                error: function (xhr, status, error) {
-                    $("#error").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
-                }
-            });
-        });
+                });
+            } else {
+                $("#error").html('<div class="text-danger">All inputs must be filled!</div>')
+
+            }
+        }
     </script>
 
 {% endblock %}
