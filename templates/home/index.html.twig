@@ -35,9 +35,8 @@
             }
             $('#' + $id).addClass('active');
             currentActiveId = $id;
-
             $('#tabInfo').html(
-                '<h3 class="d-flex justify-content-center">' + weathersData[$id].name + '</h3>\n' +
+                '<h3 class="d-flex justify-content-center">' + weathersData[$id].city + '</h3>\n' +
                 '<table class="table">\n' +
                 '  <thead>\n' +
                 '    <tr>\n' +
@@ -50,11 +49,11 @@
                 '  </thead>\n' +
                 '  <tbody>\n' +
                 '    <tr>\n' +
-                '      <td>' + weathersData[$id].main.temp_min + '</td>\n' +
-                '      <td>' + weathersData[$id].main.temp_max + '</td>\n' +
-                '      <td>' + weathersData[$id].main.temp + '</td>\n' +
-                '      <td>' + weathersData[$id].weather[0].description + '</td>\n' +
-                '      <td>' + weathersData[$id].wind.speed + '</td>\n' +
+                '      <td>' + weathersData[$id].minTemp + '</td>\n' +
+                '      <td>' + weathersData[$id].maxTemp + '</td>\n' +
+                '      <td>' + weathersData[$id].currentTemp + '</td>\n' +
+                '      <td>' + weathersData[$id].weatherDescription + '</td>\n' +
+                '      <td>' + weathersData[$id].windSpeed + '</td>\n' +
                 '    </tr>\n' +
                 '  </tbody>\n' +
                 '</table>');
@@ -65,7 +64,7 @@
         }
 
         function checkIfAlreadyContains($data) {
-            return weathersData.some(weathersData => weathersData.name === $data);
+            return weathersData.some(weathersData => weathersData.city === $data);
         }
 
         function fetchData() {
@@ -77,7 +76,7 @@
                     data: '{"apiKey":"' + $("#apiKey").val() + '","city":"' + $("#city").val() + '"}',
                     dataType: "json",
                     success: function (result) {
-                        if (!checkIfAlreadyContains(result['name'])) {
+                        if (!checkIfAlreadyContains(result['city'])) {
                             $("#error").html("");
                             $('#tabData').append(
                                 '<li class="nav-item">\n' +
@@ -85,7 +84,7 @@
                                         'class="nav-link"' +
                                         ' onclick="tabClick(this.id)"' +
                                         ' id="' + identification + '">' +
-                                        result['name'] +
+                                        result['city'] +
                                     '</a>\n' +
                                 '</li>'
                             );

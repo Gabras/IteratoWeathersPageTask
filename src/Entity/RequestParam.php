@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Model;
+namespace App\Entity;
 
 
 class RequestParam
@@ -15,22 +15,22 @@ class RequestParam
         $this->value = $value;
     }
 
-    public function setKey($key)
+    public function setKey($key): void
     {
         $this->key = $key;
     }
 
-    public function getKey()
+    public function getKey(): string
     {
         return $this->key;
     }
 
-    public function setValue($value)
+    public function setValue($value): void
     {
         $this->value = $value;
     }
 
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
