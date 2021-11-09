@@ -71,7 +71,7 @@
             if (checkInputs()) {
                 $.ajax({
                     type: "POST",
-                    url: "weather",
+                    url: "api/weather",
                     contentType: "application/json; charset=utf-8",
                     data: '{"apiKey":"' + $("#apiKey").val() + '","city":"' + $("#city").val() + '"}',
                     dataType: "json",

@@ -8,17 +8,36 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use OpenApi\Annotations as OA;
 
 class WeatherApiResponse
 {
-    private $city;
-    private $minTemp;
-    private $maxTemp;
-    private $currentTemp;
-    private $weatherDescription;
-    private $windSpeed;
+    /**
+     * @OA\Property(type="string", maxLength=255)
+     */
+    private string $city;
+    /**
+     * @OA\Property(type="float")
+     */
+    private float $minTemp;
+    /**
+     * @OA\Property(type="float")
+     */
+    private float $maxTemp;
+    /**
+     * @OA\Property(type="float")
+     */
+    private float $currentTemp;
+    /**
+     * @OA\Property(type="string", maxLength=255)
+     */
+    private string $weatherDescription;
+    /**
+     * @OA\Property(type="float")
+     */
+    private float $windSpeed;
 
-    public function __construct($city, $minTemp, $maxTemp, $currentTemp, $weatherDescription, $windSpeed)
+    public function __construct(string $city, float $minTemp, float $maxTemp, float $currentTemp, string $weatherDescription, float $windSpeed)
     {
         $this->city = $city;
         $this->minTemp = $minTemp;
@@ -28,67 +47,7 @@ class WeatherApiResponse
         $this->windSpeed = $windSpeed;
     }
 
-    public function setCity($city): void
-    {
-        $this->city = $city;
-    }
-
-    public function getCity(): string
-    {
-        return $this->city;
-    }
-
-    public function setMinTemp($minTemp): void
-    {
-        $this->minTemp = $minTemp;
-    }
-
-    public function getMinTemp(): float
-    {
-        return $this->minTemp;
-    }
-
-    public function setMaxTemp($maxTemp): void
-    {
-        $this->maxTemp = $maxTemp;
-    }
-
-    public function getMaxTemp(): float
-    {
-        return $this->maxTemp;
-    }
-
-    public function setCurrentTemp($currentTemp): void
-    {
-        $this->currentTemp = $currentTemp;
-    }
-
-    public function getCurrentTemp(): float
-    {
-        return $this->currentTemp;
-    }
-
-    public function setWeatherDescription($weatherDescription): void
-    {
-        $this->weatherDescription = $weatherDescription;
-    }
-
-    public function getWeatherDescription(): string
-    {
-        return $this->weatherDescription;
-    }
-
-    public function setWindSpeed($windSpeed): void
-    {
-        $this->windSpeed = $windSpeed;
-    }
-
-    public function getWindSpeed(): float
-    {
-        return $this->windSpeed;
-    }
-
-    public function formatToJson($data)
+    public function formatToJson(WeatherApiResponse $data)
     {
         $encoders = [new XmlEncoder(), new JsonEncoder()];
         $normalizers = [new ObjectNormalizer()];
@@ -96,5 +55,35 @@ class WeatherApiResponse
         $serializer = new Serializer($normalizers, $encoders);
 
         return $serializer->serialize($data, 'json');
+    }
+
+    public function getWindSpeed(): float
+    {
+        return $this->windSpeed;
+    }
+
+    public function getWeatherDescription(): string
+    {
+        return $this->weatherDescription;
+    }
+
+    public function getCurrentTemp(): float
+    {
+        return $this->currentTemp;
+    }
+
+    public function getMaxTemp(): float
+    {
+        return $this->maxTemp;
+    }
+
+    public function getMinTemp(): float
+    {
+        return $this->minTemp;
+    }
+
+    public function getCity(): string
+    {
+        return $this->city;
     }
 }
